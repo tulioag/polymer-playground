@@ -1,0 +1,47 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="hour-field.html">
+<link rel="import" href="interval-section.html">
+
+<dom-module id="time-tracker-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Time tracking</h2>
+    <div>
+      <hour-field label="Arrived at" value="{{arrival}}" ></hour-field>
+      <hour-field label="Departed at" value="{{depature}}" ></hour-field>
+    </div>
+    <div>
+      <interval-section value={{interval}}></interval-section>
+    </div>
+    
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class TimeTrackerApp extends Polymer.Element {
+      static get is() { return 'time-tracker-app'; }
+      static get properties() {
+        return {
+          arrival: {
+            type: String
+          },
+          depature: {
+            type: String
+          },
+          interval: {
+            type: Object
+          }
+        };
+      }
+    }
+
+    window.customElements.define(TimeTrackerApp.is, TimeTrackerApp);
+  </script>
+</dom-module>

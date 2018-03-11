@@ -1,0 +1,6 @@
+{
+  "name": "time-tracker",
+  "short_name": "time-tracker",
+  "start_url": "/",
+  "display": "standalone"
+}

@@ -1,0 +1,42 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/vaadin-text-field/vaadin-text-field.html">
+<link rel="import" href="../../bower_components/vaadin-radio-button/vaadin-radio-button.html">
+<link rel="import" href="../../bower_components/vaadin-radio-button/vaadin-radio-group.html">
+
+<dom-module id="interval-section">
+    <template>
+        <vaadin-text-field label="Amount" pattern="\d*\.?\d*" value="{{amount}}" maxlength="5"></vaadin-text-field>
+        <vaadin-radio-group value="{{type}}">
+            <vaadin-radio-button value="minute">Minute</vaadin-radio-button>
+            <vaadin-radio-button value="hour" disabled>Hour</vaadin-radio-button>
+        </vaadin-radio-group>
+        <vaadin-text-field label="Description" value="{{value.description}}" ></vaadin-text-field>
+        
+    </template>
+    <script>
+        class IntervalSection extends Polymer.Element {
+            static get is() { return 'interval-section'} 
+            static get properties() {
+                return { 
+                    amount: {
+                        type: Number
+                    },
+                    type: {
+                        type: String,
+                        value: "minute"
+                    },
+                    value: {
+                        type: Object,
+                        notify: true,
+                        computed: "calculateValue(amount,type,description)"
+                    }                   
+                }
+            }
+
+            calculateValue(amount,type,description) {
+                return {amount:amount,description:description};
+            }
+        }
+        window.customElements.define(IntervalSection.is, IntervalSection);
+    </script>
+    </dom-module>
