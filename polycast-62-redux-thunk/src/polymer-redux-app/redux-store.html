@@ -1,0 +1,42 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer-redux/polymer-redux.html">
+
+<script>
+    const initialState =  {
+        loading: false,
+        username: null
+    };
+
+    const reducer = (state, action) => {
+        if(!state) return initialState;
+        switch(action.type) {
+            case 'SIGN_UP_STARTED':
+                return Object.assign({}, state, { loading: true});
+
+            case 'SIGN_UP_COMPLETED':
+                return Object.assign({}, state, { loading: false, username: action.username});
+                
+        }
+    }
+
+    const store = Redux.createStore(
+        reducer,
+        Redux.applyMiddleware(ReduxThunk.default)
+    );
+    const ReduxBehavior = PolymerRedux(store);
+    const AsyncActionsBehavior = Parent => class extends Parent {
+        static get actions() {
+            return {
+                signUpWithTimeout: function (username) {
+                    console.log(username);
+                    return function(dispatch) {
+                        dispatch({ type: 'SIGN_UP_STARTED'});
+                        setTimeout(function(){
+                            dispatch({type: 'SIGN_UP_COMPLETED', username:username});
+                        },3000);
+                    }
+                }
+            };
+        }
+    }
+</script>

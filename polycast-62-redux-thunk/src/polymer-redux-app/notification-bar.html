@@ -1,0 +1,33 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="redux-store.html">
+
+<dom-module id='notification-bar'>
+    <template>
+        <template is="dom-if" if="{{loading}}">
+            <p>Loading...</p>
+        </template>
+        <template is="dom-if" if="[[username]]">
+            <p>Welcome, [[username]]!</p>
+        </template>
+    </template>
+    <script>
+    class NotificationBar extends ReduxBehavior(Polymer.Element) {
+        static get is() {return 'notification-bar'};
+
+        static get properties() {
+            return {
+                loading: {
+                    type: Boolean,
+                    statePath: 'loading'
+                },
+                username: {
+                    type: String,
+                    statePath: 'username'
+                }
+            };
+        }
+    }
+    window.customElements.define(NotificationBar.is, NotificationBar);
+    </script>
+</dom-module>

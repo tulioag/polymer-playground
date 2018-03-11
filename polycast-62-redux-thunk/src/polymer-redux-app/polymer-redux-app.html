@@ -1,0 +1,26 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="notification-bar.html">
+<link rel="import" href="sign-up-form.html">
+
+
+<dom-module id="polymer-redux-app">
+  <template>
+    <notification-bar></notification-bar>
+    <sign-up-form></sign-up-form>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class PolymerReduxApp extends Polymer.Element {
+      static get is() { return 'polymer-redux-app'; }
+      static get properties() {
+        return { };
+      }
+    }
+
+    window.customElements.define(PolymerReduxApp.is, PolymerReduxApp);
+  </script>
+</dom-module>
