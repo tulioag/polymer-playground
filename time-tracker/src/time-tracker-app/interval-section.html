@@ -1,41 +1,83 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-if.html">
 <link rel="import" href="../../bower_components/vaadin-text-field/vaadin-text-field.html">
-<link rel="import" href="../../bower_components/vaadin-radio-button/vaadin-radio-button.html">
-<link rel="import" href="../../bower_components/vaadin-radio-button/vaadin-radio-group.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/vaadin-button/vaadin-button.html">
+<link rel="import" href="../../bower_components/vaadin-lumo-styles/icons.html">
+<link rel="import" href="hour-field.html">
 
 <dom-module id="interval-section">
     <template>
-        <vaadin-text-field label="Amount" pattern="\d*\.?\d*" value="{{amount}}" maxlength="5"></vaadin-text-field>
-        <vaadin-radio-group value="{{type}}">
-            <vaadin-radio-button value="minute">Minute</vaadin-radio-button>
-            <vaadin-radio-button value="hour" disabled>Hour</vaadin-radio-button>
-        </vaadin-radio-group>
-        <vaadin-text-field label="Description" value="{{value.description}}" ></vaadin-text-field>
-        
+        <dom-if if="[[label]]">
+            <h3>[[label]]</h3>
+        </dom-if>
+        <hour-field label="Start" value="{{start}}"></hour-field>
+        <hour-field label="End" value="{{end}}"></hour-field>
+        <vaadin-text-field label="Description" value="{{description}}"></vaadin-text-field>
+        <vaadin-button theme="icon" aria-label="Delete item" on-click="remove" theme="primary">
+            <iron-icon icon="lumo:cross" ></iron-icon>
+        </vaadin-button>
+        <template is="dom-repeat" items="{{subItems}}">
+            <interval-section value="{{item}}"></interval-section>
+        </template>
+        <vaadin-button aria-label="Create new" on-click="_addItem">
+            <iron-icon icon="lumo:plus"></iron-icon>
+        </vaadin-button>
     </template>
     <script>
         class IntervalSection extends Polymer.Element {
             static get is() { return 'interval-section'} 
             static get properties() {
-                return { 
-                    amount: {
-                        type: Number
+                return {
+                    label: {
+                        type: String
                     },
-                    type: {
-                        type: String,
-                        value: "minute"
+                    start: {
+                        type: String
+                    },
+                    end: {
+                        type: String
+                    },
+                    description: {
+                        type: String
                     },
                     value: {
                         type: Object,
                         notify: true,
-                        computed: "calculateValue(amount,type,description)"
-                    }                   
+                        computed: "_calculateValue(start,end,description,subItems)"
+                    },
+                    subItems: {
+                        type: Array,
+                        value: []
+                    }
                 }
+            }            
+
+            _addItem() {
+                this.push("subItems",{value:{}});
             }
 
-            calculateValue(amount,type,description) {
-                return {amount:amount,description:description};
+            _calculateValue(start,end,description,subItems) {
+                const startValues = this._getValues(start);
+                const endValues = this._getValues(end);
+                const diff = endValues[0] - startValues[0] + ((endValues[1] - startValues[1]) / 60);
+                const subItemsSum = subItems.filter(s => s && s.value && s.value.value).map(s => s.value.value).reduce((accumulator, currentValue) => accumulator + currentValue,0);
+                return {start:start,end:end,description:description,value:diff - subItemsSum};
             }
+
+            _getValues(str) {
+                const defaultValue = [0,0];
+                if(!str) return defaultValue;
+
+                const result = str.split(":").map(i => parseInt(i));
+                if(result.length < 1)
+                    return defaultValue;
+                else if (result.length == 1)
+                    return [result[0],defaultValue[1]];
+                else return result;
+            }
+
         }
         window.customElements.define(IntervalSection.is, IntervalSection);
     </script>

@@ -3,7 +3,7 @@
 
 <dom-module id="hour-field">
 <template>
-    <vaadin-text-field label="[[label]]" pattern="\d\d:\d\d" value="{{value}}" maxlength="5"></vaadin-text-field>
+    <vaadin-text-field label="[[label]]" pattern="\d{1,2}:\d\d" value="{{value}}" maxlength="5"></vaadin-text-field>
 </template>
 <script>
     class HourField extends Polymer.Element {
